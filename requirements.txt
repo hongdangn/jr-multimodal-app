@@ -1,3 +1,6 @@
 streamlit
-audio_recorder_streamlit
-streamlit-float
+google-generativeai
+langchain
+langchain-community
+faiss-cpu
+sentence-transformers
