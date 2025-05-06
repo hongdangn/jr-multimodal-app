@@ -1,40 +1,25 @@
-import os
 import base64
 import streamlit as st
-import google.generativeai as genai
-
-genai.configure(api_key="AIzaSyC-45MSDZKaXsINcdEf3gwx8ozNnypdeLw")
-client = genai.GenerativeModel("gemini-2.0-flash")
-
-def get_answer(prompt):
-    response = client.generate_content(
-        prompt
-    )
-    
-    return response.text
+from stt_pipe import pipe, generate_kwargs
 
 def speech_to_text(audio_path):
-    audio_file = genai.upload_file(audio_path)
+    description = pipe(audio_path, 
+                       chunk_length_s=15, 
+                       return_timestamps=False, 
+                       generate_kwargs=generate_kwargs)
 
-    response = client.generate_content(
-        [
-            "Please transcribe the audio file without any explaination, just transcribe it.", 
-            audio_file
-        ]
-    )
+    return description["text"]
 
-    return response.text
-
-def text_to_speech(input_text):
-    response = client.audio.speech.create(
-        model="tts-1",
-        voice="nova",
-        input=input_text
-    )
-    webm_file_path = "temp_audio_play.mp3"
-    with open(webm_file_path, "wb") as f:
-        response.stream_to_file(webm_file_path)
-    return webm_file_path
+# def text_to_speech(input_text):
+#     response = client.audio.speech.create(
+#         model="tts-1",
+#         voice="nova",
+#         input=input_text
+#     )
+#     webm_file_path = "temp_audio_play.mp3"
+#     with open(webm_file_path, "wb") as f:
+#         response.stream_to_file(webm_file_path)
+#     return webm_file_path
 
 def autoplay_audio(file_path: str):
     with open(file_path, "rb") as f:

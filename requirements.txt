@@ -4,3 +4,5 @@ langchain
 langchain-community
 faiss-cpu
 sentence-transformers
+punctuators
+git+https://github.com/jianfch/stable-ts.git

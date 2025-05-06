@@ -1,6 +1,10 @@
 import streamlit as st
 from qa import QuestionAnswer
 from obj import vector_store
+from utils import speech_to_text
+import os
+
+save_dir = "uploads"
 
 task_type = st.sidebar.selectbox("あなたの好きなチャットボット", [
     "テキストチャットボット", "音声チャットボット"
@@ -18,23 +22,31 @@ if 'qa' not in st.session_state:
 if task_type == '音声チャットボット':
     st.header('あなたの声で私に質問してください!!')
     with st.form("stsForm"):
-        uploaded_file = st.file_uploader('ここにファイルをアップロードしてください', ["mp3","mp4","mpeg","mpga","m4a","wav","webm"])
+        uploaded_file = st.file_uploader('ここにファイルをアップロードしてください', ["mp3","wav"])
         submitted = st.form_submit_button('送信')
 
-        transcription = "dcm dang gioi vay" if uploaded_file else None
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir, exist_ok=True)
+        
+        if uploaded_file:
+            save_path = os.path.join(save_dir, uploaded_file.name)
+            with open(save_path, "wb") as f:
+                f.write(uploaded_file.getbuffer())
+
+        prompt_transcription = speech_to_text(save_path) if uploaded_file else None
 
     for msg in st.session_state.speech_messages:
         with st.chat_message(msg["role"]):
             st.write(msg["content"])
 
-    if submitted and transcription:
-        st.session_state.speech_messages.append({"role": "user", "content": transcription})
+    if submitted and prompt_transcription:
+        st.session_state.speech_messages.append({"role": "user", "content": prompt_transcription})
 
         with st.chat_message("user"):
-            st.write(transcription)
+            st.write(prompt_transcription)
             
         with st.spinner("ちょっと待って..."):
-            response = "dang ky nay 4.0"
+            response = st.session_state.qa.get_answer(prompt_transcription)
             st.session_state.speech_messages.append({"role": "assistant", "content": response})
             st.chat_message("assistant").write(response)
 
