@@ -2,4 +2,5 @@
 .env.*
 
 __pycache__/
-faiss-jap-db/
+jap-db/*
+!jap-db/.gitkeep
