@@ -20,10 +20,9 @@ class QuestionAnswer:
             "temperature": 0.9,
             "top_p": 1,
             "top_k": 3,
-            "max_output_tokens": 2048,
         }
 
-        self.gemini = genai.GenerativeModel(model_name="gemini-2.0-flash",
+        self.gemini = genai.GenerativeModel(model_name="gemini-2.5-flash-preview-05-20",
                                        generation_config=generation_config,)
 
     def get_final_prompt(self, query):

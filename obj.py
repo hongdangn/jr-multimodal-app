@@ -6,7 +6,7 @@ import torch
 
 genai.configure(api_key="AIzaSyC-45MSDZKaXsINcdEf3gwx8ozNnypdeLw")
 
-model_name = "pkshatech/GLuCoSE-base-ja-v2"
+model_name = "cl-nagoya/ruri-v3-310m"
 device = "cuda" if torch.cuda.is_available() else "cpu"
 faiss_db_path = "./faiss-jap-db"
 
