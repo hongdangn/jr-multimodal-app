@@ -3,8 +3,11 @@ import google.generativeai as genai
 from sentence_transformers import SentenceTransformer
 from langchain_community.vectorstores import FAISS
 import torch
+from dotenv import load_dotenv
+import os
 
-genai.configure(api_key="AIzaSyC-45MSDZKaXsINcdEf3gwx8ozNnypdeLw")
+load_dotenv()
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 model_name = "cl-nagoya/ruri-v3-310m"
 device = "cuda" if torch.cuda.is_available() else "cpu"
